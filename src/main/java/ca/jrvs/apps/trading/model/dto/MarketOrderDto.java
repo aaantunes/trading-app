@@ -1,4 +1,4 @@
-package ca.jrvs.apps.trading.model.domain;
+package ca.jrvs.apps.trading.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,17 +8,17 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "accountId",
-        "ticker",
-        "position"
+        "size",
+        "ticker"
 })
-public class Position {
+public class MarketOrderDto {
 
     @JsonProperty("accountId")
     private Integer accountId;
+    @JsonProperty("size")
+    private Integer size;
     @JsonProperty("ticker")
     private String ticker;
-    @JsonProperty("position")
-    private Integer position;
 
     @JsonProperty("accountId")
     public Integer getAccountId() {
@@ -28,6 +28,16 @@ public class Position {
     @JsonProperty("accountId")
     public void setAccountId(Integer accountId) {
         this.accountId = accountId;
+    }
+
+    @JsonProperty("size")
+    public Integer getSize() {
+        return size;
+    }
+
+    @JsonProperty("size")
+    public void setSize(Integer size) {
+        this.size = size;
     }
 
     @JsonProperty("ticker")
@@ -40,19 +50,9 @@ public class Position {
         this.ticker = ticker;
     }
 
-    @JsonProperty("position")
-    public Integer getPosition() {
-        return position;
-    }
-
-    @JsonProperty("position")
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("accountId", accountId).append("ticker", ticker).append("position", position).toString();
+        return new ToStringBuilder(this).append("accountId", accountId).append("size", size).append("ticker", ticker).toString();
     }
 
 }

@@ -1,5 +1,6 @@
 package ca.jrvs.apps.trading.model.domain;
 
+import ca.jrvs.apps.trading.model.domain.Quote;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -7,28 +8,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "accountId",
         "ticker",
-        "position"
+        "position",
+        "quote"
 })
-public class Position {
+public class SecurityRow {
 
-    @JsonProperty("accountId")
-    private Integer accountId;
     @JsonProperty("ticker")
     private String ticker;
     @JsonProperty("position")
-    private Integer position;
-
-    @JsonProperty("accountId")
-    public Integer getAccountId() {
-        return accountId;
-    }
-
-    @JsonProperty("accountId")
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
-    }
+    private Position position;
+    @JsonProperty("quote")
+    private Quote quote;
 
     @JsonProperty("ticker")
     public String getTicker() {
@@ -41,18 +32,28 @@ public class Position {
     }
 
     @JsonProperty("position")
-    public Integer getPosition() {
+    public Position getPosition() {
         return position;
     }
 
     @JsonProperty("position")
-    public void setPosition(Integer position) {
+    public void setPosition(Position position) {
         this.position = position;
+    }
+
+    @JsonProperty("quote")
+    public Quote getQuote() {
+        return quote;
+    }
+
+    @JsonProperty("quote")
+    public void setQuote(Quote quote) {
+        this.quote = quote;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("accountId", accountId).append("ticker", ticker).append("position", position).toString();
+        return new ToStringBuilder(this).append("ticker", ticker).append("position", position).append("quote", quote).toString();
     }
 
 }
