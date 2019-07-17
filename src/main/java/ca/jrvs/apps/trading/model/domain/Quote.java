@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         "lastPrice",
         "ticker"
 })
-public class Quote {
+public class Quote implements Entity<String>{
 
     @JsonProperty("askPrice")
     private Integer askPrice;
