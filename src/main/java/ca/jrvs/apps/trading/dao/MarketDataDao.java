@@ -9,12 +9,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class MarketDataDao {
 
     private Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
@@ -29,6 +31,7 @@ public class MarketDataDao {
     private final String BATCH_QUOTE_URL;
     private HttpClientConnectionManager httpClientConnectionManager;
 
+    @Autowired
     public MarketDataDao(HttpClientConnectionManager httpClientConnectionManager, MarketDataConfig marketDataConfig) {
         this.httpClientConnectionManager = httpClientConnectionManager;
 
@@ -38,15 +41,17 @@ public class MarketDataDao {
     }
 
     /**
+     * Finds IexQuotes dependent on tickers passed
+     *
      * @param tickerList
-     * @return
+     * @return List<IexQuote>iexQuotes</IexQuote>
      * @throws org.springframework.dao.DataRetrievalFailureException if unable to get http response
      */
+
     public List<IexQuote> findIexQuoteByTicker(List<String> tickerList) {
         //convert list into comma seperated string
         String tickerBatch = String.join(",", tickerList);
         String uri = String.format(BATCH_QUOTE_URL, tickerBatch);
-
         logger.info("Get URI: " + uri);
 
         //Get HTTP response body in String
@@ -56,7 +61,7 @@ public class MarketDataDao {
         if (IexQuotesJson.length() == 0) {
             throw new ResourceNotFoundException("Not found");
         }
-        //Iex will skip invalid symbols/ticker..we need to check it
+
         //check for invalid tickers
         if (IexQuotesJson.length() != tickerList.size()) {
             throw new IllegalArgumentException("Invalid ticker/symbol");
@@ -103,8 +108,7 @@ public class MarketDataDao {
                         return Optional.ofNullable(body).orElseThrow(
                                 () -> new IOException("Unexpected empty http response body"));
                     case 404:
-                        throw new RuntimeException("Not Found");
-//                        throw new ResourceNotFoundException("Not found");
+                        throw new ResourceNotFoundException("Not found");
                     default:
                         throw new DataRetrievalFailureException("Unexpected status:" + response.getStatusLine().getStatusCode());
                 }
@@ -114,27 +118,11 @@ public class MarketDataDao {
         }
     }
 
-
     private CloseableHttpClient getHttpClient() {
         return HttpClients.custom()
                 .setConnectionManager(httpClientConnectionManager)
                 //prevent connectionManager shutdown when calling httpClient.close()
                 .setConnectionManagerShared(true)
                 .build();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MarketDataConfig config = new MarketDataConfig();
-        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        cm.setMaxTotal(50);
-        cm.setDefaultMaxPerRoute(50);
-        MarketDataDao dao = new MarketDataDao(cm, config);
-
-        List<String> tickers = new ArrayList<>();
-        tickers.add("AAPL");
-        tickers.add("TSLA");
-
-        dao.findIexQuoteByTicker(tickers);
-//        System.out.println(JsonUtil.toJson(dao.findIexQuoteByTicker(tickers), true, false));
     }
 }

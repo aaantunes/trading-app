@@ -2,22 +2,22 @@ package ca.jrvs.apps.trading.model.config;
 
 public class MarketDataConfig {
 
-    private static String host = "https://cloud.iexapis.com/stable";
-    private static String token = "pk_1a7cc2a4afb649efb1a13879a39cac97";
+    private String host;
+    private String token;
 
-    public static String getHost() {
+    public String getHost() {
         return host;
     }
 
-    public static void setHost(String host) {
-        MarketDataConfig.host = host;
+    public void setHost(String host) {
+        this.host = host;
     }
 
-    public static String getToken() {
+    public String getToken() {
         return token;
     }
 
-    public static void setToken(String token) {
-        MarketDataConfig.token = token;
+    public void setToken(String token) {
+        this.token = token;
     }
 }
