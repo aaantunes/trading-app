@@ -11,6 +11,17 @@ import java.io.IOException;
 public class JsonUtil {
 
     /**
+     * Calls toJson with prettyJson parameter
+     *
+     * @param object    input object
+     * @return JSON String
+     * @throws JsonProcessingException
+     */
+    public static String toPrettyJson(Object object) throws JsonProcessingException {
+        return toJson(object, true, false);
+    }
+
+    /**
      * Convert a java object to JSON string
      *
      * @param object            input object
