@@ -27,14 +27,14 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        marketDataDao.findIexQuoteByTicker("aapl");
+//        marketDataDao.findIexQuoteByTicker("aapl");
     }
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Application.class);
 
         //Turn off web
-        app.setWebApplicationType(WebApplicationType.NONE);
+//        app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
     }
 }

@@ -32,8 +32,7 @@ public class QuoteController {
     private MarketDataDao marketDataDao;
 
     @Autowired
-    public QuoteController(QuoteService quoteService, QuoteDao quoteDao,
-                           MarketDataDao marketDataDao) {
+    public QuoteController(QuoteService quoteService, QuoteDao quoteDao, MarketDataDao marketDataDao) {
         this.quoteService = quoteService;
         this.quoteDao = quoteDao;
         this.marketDataDao = marketDataDao;
@@ -53,7 +52,7 @@ public class QuoteController {
     @ResponseStatus(HttpStatus.OK)
     public void putQuote(@RequestBody Quote quote) {
         try {
-            quoteDao.update(Collections.singletonList(quote));
+//            quoteDao.update(Collections.singletonList(quote));
         } catch (Exception e) {
             throw ResponseExceptionUtil.getResponseStatusException(e);
         }

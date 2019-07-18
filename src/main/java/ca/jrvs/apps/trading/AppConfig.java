@@ -5,8 +5,11 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class AppConfig {
@@ -27,8 +30,16 @@ public class AppConfig {
         return marketDataConfig;
     }
 
-//    @Bean
-//    public DataSource dataSource() {}
+    @Bean
+    public DataSource dataSource() {
+        return DataSourceBuilder
+                .create()
+                /*.username("")
+                .password("")
+                .url("")
+                .driverClassName("")*/
+                .build();
+    }
 
     @Bean
     public HttpClientConnectionManager httpClientConnectionManager() {
