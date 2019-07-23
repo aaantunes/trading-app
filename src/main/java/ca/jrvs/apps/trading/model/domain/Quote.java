@@ -25,8 +25,6 @@ public class Quote implements Entity<String> {
     private Double bidPrice;
     @JsonProperty("bidSize")
     private Integer bidSize;
-    @JsonProperty("id")
-    private String id;
     @JsonProperty("lastPrice")
     private Double lastPrice;
     @JsonProperty("ticker")
@@ -74,12 +72,12 @@ public class Quote implements Entity<String> {
 
     @JsonProperty("id")
     public String getId() {
-        return id;
+        return ticker;
     }
 
     @JsonProperty("id")
     public void setId(String id) {
-        this.id = id;
+        this.ticker = id;
     }
 
     @JsonProperty("lastPrice")
@@ -102,9 +100,5 @@ public class Quote implements Entity<String> {
         this.ticker = ticker;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("askPrice", askPrice).append("askSize", askSize).append("bidPrice", bidPrice).append("bidSize", bidSize).append("id", id).append("lastPrice", lastPrice).append("ticker", ticker).toString();
-    }
-
+    //TODO: IMPLEMENT toString
 }
