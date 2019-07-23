@@ -41,22 +41,26 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 //        marketDataDao.findIexQuoteByTicker("aapl");
-        quoteController.createQuote("aapl");
+//        quoteController.createQuote("tsla");
+        Quote quote = new Quote();
+        quote.setAskPrice(200.0);
+        quote.setAskSize(3);
+        quote.setBidPrice(202.0);
+        quote.setLastPrice(201.99);
+        quote.setBidSize(4);
+        quote.setId("1000");
+        quote.setTicker("AAPL");
+
+        quoteController.putQuote(quote);
     }
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Application.class);
 
-        Quote quote = new Quote();
-        quote.setAskPrice(200.0);
-        quote.setAskSize(3);
-        quote.setBidPrice(202.0);
-        quote.setBidSize(4);
-        quote.setId("1000");
-        quote.setTicker("aapl");
+
 
         //Turn off web
-        app.setWebApplicationType(WebApplicationType.NONE);
+//        app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
     }
 }
