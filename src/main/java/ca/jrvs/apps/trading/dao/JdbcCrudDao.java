@@ -79,8 +79,8 @@ public abstract class JdbcCrudDao<E extends Entity, ID> implements CrudRepositor
         if (id == null) {
             throw new IllegalArgumentException("ID can't be null");
         }
-        String selectSql = "SELECT count(*) FROM " + getTableName() + " WHERE " + idName + "=?";
-        logger.info(selectSql);
+        String selectSql = "SELECT count(*) FROM " + getTableName() + " WHERE " + idName + " =?";
+        logger.info("SQL Statement: " + selectSql);
 
         Integer count = getJdbcTemplate()
                 .queryForObject(selectSql, Integer.class, id);

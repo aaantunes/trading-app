@@ -79,7 +79,7 @@ public class MarketDataDao {
         });
 
         try {
-            logger.info(JsonUtil.toJson(iexQuotes, true, false));
+            logger.info("MarketDataDao/findIexQuoteByTicker iexQuote: " + JsonUtil.toJson(iexQuotes, true, false));
         } catch (JsonProcessingException e) {
             logger.error("logger.error bc of prettyJson");
         }

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +23,7 @@ public class QuoteDao extends JdbcCrudDao<Quote, String> {
     private static final Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
 
     private final String TABLE_NAME = "quote";
-    private final String ID_NAME = "id";
+    private final String ID_NAME = "ticker";
 
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert simpleInsert;
@@ -29,8 +31,7 @@ public class QuoteDao extends JdbcCrudDao<Quote, String> {
     @Autowired
     public QuoteDao(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(ID_NAME);
+        simpleInsert = new SimpleJdbcInsert(dataSource).withTableName(TABLE_NAME);
     }
 
     @Override
@@ -58,11 +59,16 @@ public class QuoteDao extends JdbcCrudDao<Quote, String> {
         return simpleInsert;
     }
 
-    /**
-     * Updates a single quote by passing in a singleton List<Quote>
-     *
-     * @param quotes
-     */
+    @Override
+    public Quote save(Quote quote) {
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(quote);
+        int row = getSimpleInsert().execute(parameterSource);
+        if (row != 1) {
+            throw new IncorrectResultSizeDataAccessException("Failed to insert", 1, row);
+        }
+        return quote;
+    }
+
     public void update(List<Quote> quotes) {
         if (quotes.isEmpty()) {
             throw new IllegalArgumentException("Can't pass an empty quoteList");
