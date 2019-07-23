@@ -73,6 +73,7 @@ public class QuoteService {
         for (int i = 0; i < iexQuotes.size(); i++) {
             if (!quoteDao.existsById(iexQuotes.get(i).getSymbol())) {
                 quotes.add(buildQuoteFromIexQuote(iexQuotes.get(i)));
+                logger.info("TESTING QuoteList: "+quotes.get(i).toString());
                 quoteDao.save(quotes.get(i));
             }
         }
@@ -103,5 +104,10 @@ public class QuoteService {
      * @throws IllegalArgumentException for invalid input
      */
     public void updateMarketData() {
+    }
+
+    public void updateQuote(Quote quote){
+        quote.setTicker(quote.getTicker().toUpperCase());
+        quoteDao.update(Collections.singletonList(quote));
     }
 }
