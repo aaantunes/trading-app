@@ -1,10 +1,10 @@
 package ca.jrvs.apps.trading.dao;
 
 import ca.jrvs.apps.trading.model.domain.Quote;
-import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,10 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public class QuoteDao extends JdbcCrudDao<Quote, Integer> {
+public class QuoteDao extends JdbcCrudDao<Quote, String> {
 
     private static final Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
 
@@ -59,20 +60,47 @@ public class QuoteDao extends JdbcCrudDao<Quote, Integer> {
 
     /**
      * Updates a single quote by passing in a singleton List<Quote>
-     * @param quote
+     *
+     * @param quotes
      */
-    //TODO: Ask Edward why we pass a List of quotes if we use Collections.Singleton in quote controller
-    public void update(List<Quote> quote){
-        if (quote.isEmpty()){
-            throw new IllegalArgumentException("Can't pass an empty quote");
+    public void update(List<Quote> quotes) {
+        if (quotes.isEmpty()) {
+            throw new IllegalArgumentException("Can't pass an empty quoteList");
         }
         String sql = "UPDATE " + TABLE_NAME + " SET last_price=?, bid_price=?, bid_size=?," +
                 " ask_price=?, ask_size=? WHERE ticker=?";
         List<Object[]> batch = new ArrayList<>();
+        quotes.forEach(quote -> {
+            if (!existsById(quote.getTicker())) {
+                throw new ResourceNotFoundException("Ticker not found:" + quote.getTicker());
+            }
+            Object[] values = new Object[]{quote.getLastPrice(), quote.getBidPrice(), quote.getBidSize(),
+                    quote.getAskPrice(), quote.getAskSize(), quote.getTicker()};
+            batch.add(values);
+        });
+        int[] rows = jdbcTemplate.batchUpdate(sql, batch);
+        int totalRows = Arrays.stream(rows).sum();
+        if (totalRows != quotes.size()) {
+            throw new IncorrectResultSizeDataAccessException("Number of rows ", quotes.size(), totalRows);
+        }
+
+       /* Another implementation from Spring docs data access 3.5.1
+        return this.jdbcTemplate.batchUpdate(
+            "update t_actor set first_name = ?, last_name = ? where id = ?",
+            new BatchPreparedStatementSetter() {
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setString(1, actors.get(i).getFirstName());
+                    ps.setString(2, actors.get(i).getLastName());
+                    ps.setLong(3, actors.get(i).getId().longValue());
+                }
+                public int getBatchSize() {
+                    return actors.size();
+                }
+            });*/
 
     }
 
-    public List<Quote> findAll(){
+    public List<Quote> findAll() {
         String sql = "SELECT * FROM " + TABLE_NAME;
         List<Quote> quotes = jdbcTemplate
                 .query(sql, BeanPropertyRowMapper.newInstance(Quote.class));

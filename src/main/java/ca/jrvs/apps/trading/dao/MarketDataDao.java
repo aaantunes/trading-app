@@ -47,7 +47,6 @@ public class MarketDataDao {
      * @return List<IexQuote>iexQuotes</IexQuote>
      * @throws org.springframework.dao.DataRetrievalFailureException if unable to get http response
      */
-
     public List<IexQuote> findIexQuoteByTicker(List<String> tickerList) {
         //convert list into comma seperated string
         String tickerBatch = String.join(",", tickerList);

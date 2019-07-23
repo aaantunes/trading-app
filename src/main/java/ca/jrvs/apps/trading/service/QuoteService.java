@@ -4,10 +4,15 @@ import ca.jrvs.apps.trading.dao.MarketDataDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
 import ca.jrvs.apps.trading.model.domain.IexQuote;
 import ca.jrvs.apps.trading.model.domain.Quote;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class QuoteService {
+
+    private static final Logger logger = LoggerFactory.getLogger(QuoteService.class);
 
     private QuoteDao quoteDao;
     private MarketDataDao marketDataDao;
@@ -32,8 +39,19 @@ public class QuoteService {
      */
     public static Quote buildQuoteFromIexQuote(IexQuote iexQuote) {
         //TODO: Implement buildQuoteFromIexQuote()
-
-        return null;
+        if (iexQuote == null) {
+            throw new IllegalArgumentException("Must pass iexQuote into buildQuoteFromIexQuote");
+        }
+        Quote quote = new Quote();
+        quote.setAskPrice(Double.parseDouble(iexQuote.getIexAskPrice()));
+        quote.setAskSize(Integer.parseInt(iexQuote.getIexAskSize()));
+        quote.setBidPrice(Double.parseDouble(iexQuote.getIexBidPrice()));
+        quote.setBidSize(Integer.parseInt(iexQuote.getIexBidSize()));
+        quote.setLastPrice(Double.parseDouble(iexQuote.getLatestPrice()));
+        //Add if lastPrice is null stock market is closed
+        quote.setTicker(iexQuote.getSymbol());
+        logger.info("buildQuoteFromIexQuote: " + quote.toString());
+        return quote;
     }
 
     /**
@@ -48,7 +66,16 @@ public class QuoteService {
      * @throws IllegalArgumentException for invalid input
      */
     public void initQuotes(List<String> tickers) {
-        //buildQuoteFromIexQuote helper method is used here
+        //Get IexQuote(s)
+        List<IexQuote> iexQuotes = marketDataDao.findIexQuoteByTicker(tickers);
+        //convert
+        List<Quote> quotes = new ArrayList<>();
+        for (int i = 0; i < iexQuotes.size(); i++) {
+            if (!quoteDao.existsById(iexQuotes.get(i).getSymbol())) {
+                quotes.add(buildQuoteFromIexQuote(iexQuotes.get(i)));
+                quoteDao.save(quotes.get(i));
+            }
+        }
     }
 
     /**

@@ -15,30 +15,30 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         "lastPrice",
         "ticker"
 })
-public class Quote implements Entity<String>{
+public class Quote implements Entity<String> {
 
     @JsonProperty("askPrice")
-    private Integer askPrice;
+    private Double askPrice;
     @JsonProperty("askSize")
     private Integer askSize;
     @JsonProperty("bidPrice")
-    private Integer bidPrice;
+    private Double bidPrice;
     @JsonProperty("bidSize")
     private Integer bidSize;
     @JsonProperty("id")
     private String id;
     @JsonProperty("lastPrice")
-    private Integer lastPrice;
+    private Double lastPrice;
     @JsonProperty("ticker")
     private String ticker;
 
     @JsonProperty("askPrice")
-    public Integer getAskPrice() {
+    public Double getAskPrice() {
         return askPrice;
     }
 
     @JsonProperty("askPrice")
-    public void setAskPrice(Integer askPrice) {
+    public void setAskPrice(Double askPrice) {
         this.askPrice = askPrice;
     }
 
@@ -53,12 +53,12 @@ public class Quote implements Entity<String>{
     }
 
     @JsonProperty("bidPrice")
-    public Integer getBidPrice() {
+    public Double getBidPrice() {
         return bidPrice;
     }
 
     @JsonProperty("bidPrice")
-    public void setBidPrice(Integer bidPrice) {
+    public void setBidPrice(Double bidPrice) {
         this.bidPrice = bidPrice;
     }
 
@@ -83,12 +83,12 @@ public class Quote implements Entity<String>{
     }
 
     @JsonProperty("lastPrice")
-    public Integer getLastPrice() {
+    public Double getLastPrice() {
         return lastPrice;
     }
 
     @JsonProperty("lastPrice")
-    public void setLastPrice(Integer lastPrice) {
+    public void setLastPrice(Double lastPrice) {
         this.lastPrice = lastPrice;
     }
 
