@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public abstract class JdbcCrudDao<E extends Entity, ID> implements CrudRepository<E, ID> {
 
@@ -68,7 +70,11 @@ public abstract class JdbcCrudDao<E extends Entity, ID> implements CrudRepositor
         return t;
     }
 
-    //TODO: Add findAll() from trading_app pdf quoteDao "do not peek" section
+    @SuppressWarnings("unchecked")
+    public List<E> findAll() {
+        String sql = "SELECT * FROM " + getTableName();
+        return  getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(getEntityClass()));
+    }
 
     @Override
     public boolean existsById(ID id) {

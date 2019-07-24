@@ -89,27 +89,13 @@ public class QuoteDao extends JdbcCrudDao<Quote, String> {
         if (totalRows != quotes.size()) {
             throw new IncorrectResultSizeDataAccessException("Number of rows ", quotes.size(), totalRows);
         }
-
-       /* Another implementation from Spring docs data access 3.5.1
-        return this.jdbcTemplate.batchUpdate(
-            "update t_actor set first_name = ?, last_name = ? where id = ?",
-            new BatchPreparedStatementSetter() {
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    ps.setString(1, actors.get(i).getFirstName());
-                    ps.setString(2, actors.get(i).getLastName());
-                    ps.setLong(3, actors.get(i).getId().longValue());
-                }
-                public int getBatchSize() {
-                    return actors.size();
-                }
-            });*/
-
     }
 
-    public List<Quote> findAll() {
-        String sql = "SELECT * FROM " + TABLE_NAME;
-        List<Quote> quotes = jdbcTemplate
-                .query(sql, BeanPropertyRowMapper.newInstance(Quote.class));
-        return quotes;
-    }
+    //make sure super.findAll works
+//    public List<Quote> findAll() {
+//        String sql = "SELECT * FROM " + TABLE_NAME;
+//        List<Quote> quotes = jdbcTemplate
+//                .query(sql, BeanPropertyRowMapper.newInstance(Quote.class));
+//        return quotes;
+//    }
 }

@@ -66,14 +66,13 @@ public class QuoteService {
      * @throws IllegalArgumentException for invalid input
      */
     public void initQuotes(List<String> tickers) {
-        //Get IexQuote(s)
         List<IexQuote> iexQuotes = marketDataDao.findIexQuoteByTicker(tickers);
-        //convert
         List<Quote> quotes = new ArrayList<>();
+
         for (int i = 0; i < iexQuotes.size(); i++) {
             if (!quoteDao.existsById(iexQuotes.get(i).getSymbol())) {
                 quotes.add(buildQuoteFromIexQuote(iexQuotes.get(i)));
-                logger.info("TESTING QuoteList: "+quotes.get(i).toString());
+                logger.info("TESTING QuoteList: " + quotes.get(i).toString());
                 quoteDao.save(quotes.get(i));
             }
         }
@@ -104,6 +103,17 @@ public class QuoteService {
      * @throws IllegalArgumentException for invalid input
      */
     public void updateMarketData() {
+        List<Quote> quotes = quoteDao.findAll();
+        List<IexQuote> iexQuotes = new ArrayList<>();
+        List<Quote> updatedQuotes = new ArrayList<>();
+
+        for (Quote quote : quotes) {
+            iexQuotes.add(marketDataDao.findIexQuoteByTicker(quote.getTicker()));
+        }
+        for (IexQuote iexQuote : iexQuotes) {
+            updatedQuotes.add(buildQuoteFromIexQuote(iexQuote));
+        }
+        quoteDao.update(updatedQuotes);
     }
 
     public void updateQuote(Quote quote){
