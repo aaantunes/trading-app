@@ -28,7 +28,7 @@ public class PositionDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Position> findById(Integer accountId) {
+    public List<Position> findByAccountId(Integer accountId) {
         if (accountId == null) {
             throw new IllegalArgumentException("AccountId cannot be null");
         }

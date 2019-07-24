@@ -31,9 +31,13 @@ public class FundTransferService {
      * @throws IllegalArgumentException for invalid input
      */
     public Account deposit(Integer traderId, Double fund) {
-        //TODO: Implement deposit()
-
-        return null;
+        if (traderId == null || !accountDao.existsById(traderId) || fund <= 0) {
+            throw new IllegalArgumentException("Cannot pass invalid traderId or fund amount");
+        }
+        Account account = accountDao.findByTraderId(traderId);
+        Double amount = account.getAmount() + fund;
+        accountDao.updateAmountById(account.getId(), amount);
+        return account;
     }
 
     /**
@@ -51,8 +55,12 @@ public class FundTransferService {
      * @throws IllegalArgumentException for invalid input
      */
     public Account withdraw(Integer traderId, Double fund) {
-        //TODO: Implement withdraw()
-
-        return null;
+        if (traderId == null || !accountDao.existsById(traderId) || fund <= 0) {
+            throw new IllegalArgumentException("Cannot pass invalid traderId or fund amount");
+        }
+        Account account = accountDao.findByTraderId(traderId);
+        Double amount = account.getAmount() - fund;
+        accountDao.updateAmountById(account.getId(), amount);
+        return account;
     }
 }

@@ -11,22 +11,22 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         "traderId",
         "amount"
 })
-public class Account implements Entity<String>{
+public class Account implements Entity<Integer>{
 
     @JsonProperty("id")
-    private String  id;
+    private Integer  id;
     @JsonProperty("traderId")
     private Integer traderId;
     @JsonProperty("amount")
     private Double amount;
 
     @JsonProperty("id")
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
     @JsonProperty("id")
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
