@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -90,12 +89,4 @@ public class QuoteDao extends JdbcCrudDao<Quote, String> {
             throw new IncorrectResultSizeDataAccessException("Number of rows ", quotes.size(), totalRows);
         }
     }
-
-    //make sure super.findAll works
-//    public List<Quote> findAll() {
-//        String sql = "SELECT * FROM " + TABLE_NAME;
-//        List<Quote> quotes = jdbcTemplate
-//                .query(sql, BeanPropertyRowMapper.newInstance(Quote.class));
-//        return quotes;
-//    }
 }

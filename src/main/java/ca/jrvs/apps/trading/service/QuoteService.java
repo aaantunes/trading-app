@@ -4,18 +4,15 @@ import ca.jrvs.apps.trading.dao.MarketDataDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
 import ca.jrvs.apps.trading.model.domain.IexQuote;
 import ca.jrvs.apps.trading.model.domain.Quote;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Transactional
 @Service
@@ -56,14 +53,14 @@ public class QuoteService {
 
     /**
      * Add a list of new tickers to the quote table. Skip existing ticker(s).
-     *  - Get iexQuote(s)
-     *  - convert each iexQuote to Quote entity
-     *  - persist the quote to db
+     * - Get iexQuote(s)
+     * - convert each iexQuote to Quote entity
+     * - persist the quote to db
      *
      * @param tickers a list of tickers/symbols
      * @throws ca.jrvs.apps.trading.dao.ResourceNotFoundException if ticker is not found from IEX
-     * @throws org.springframework.dao.DataAccessException if unable to retrieve data
-     * @throws IllegalArgumentException for invalid input
+     * @throws org.springframework.dao.DataAccessException        if unable to retrieve data
+     * @throws IllegalArgumentException                           for invalid input
      */
     public void initQuotes(List<String> tickers) {
         List<IexQuote> iexQuotes = marketDataDao.findIexQuoteByTicker(tickers);
@@ -83,8 +80,8 @@ public class QuoteService {
      *
      * @param ticker ticker/symbol
      * @throws ca.jrvs.apps.trading.dao.ResourceNotFoundException if ticker is not found from IEX
-     * @throws org.springframework.dao.DataAccessException if unable to retrieve data
-     * @throws IllegalArgumentException for invalid input
+     * @throws org.springframework.dao.DataAccessException        if unable to retrieve data
+     * @throws IllegalArgumentException                           for invalid input
      */
     public void initQuote(String ticker) {
         initQuotes(Collections.singletonList(ticker));
@@ -93,14 +90,14 @@ public class QuoteService {
 
     /**
      * Update quote table against IEX source
-     *  - get all quotes from the db
-     *  - foreach ticker get iexQuote
-     *  - convert iexQuote to quote entity
-     *  - persist quote to db
+     * - get all quotes from the db
+     * - foreach ticker get iexQuote
+     * - convert iexQuote to quote entity
+     * - persist quote to db
      *
      * @throws ca.jrvs.apps.trading.dao.ResourceNotFoundException if ticker is not found from IEX
-     * @throws org.springframework.dao.DataAccessException if unable to retrieve data
-     * @throws IllegalArgumentException for invalid input
+     * @throws org.springframework.dao.DataAccessException        if unable to retrieve data
+     * @throws IllegalArgumentException                           for invalid input
      */
     public void updateMarketData() {
         List<Quote> quotes = quoteDao.findAll();
@@ -116,7 +113,7 @@ public class QuoteService {
         quoteDao.update(updatedQuotes);
     }
 
-    public void updateQuote(Quote quote){
+    public void updateQuote(Quote quote) {
         quote.setTicker(quote.getTicker().toUpperCase());
         quoteDao.update(Collections.singletonList(quote));
     }

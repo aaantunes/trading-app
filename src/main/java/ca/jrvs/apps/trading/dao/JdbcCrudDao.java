@@ -73,7 +73,7 @@ public abstract class JdbcCrudDao<E extends Entity, ID> implements CrudRepositor
     @SuppressWarnings("unchecked")
     public List<E> findAll() {
         String sql = "SELECT * FROM " + getTableName();
-        return  getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(getEntityClass()));
+        return getJdbcTemplate().query(sql, BeanPropertyRowMapper.newInstance(getEntityClass()));
     }
 
     @Override
