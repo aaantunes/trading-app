@@ -19,7 +19,7 @@ import java.util.List;
 @Repository
 public class QuoteDao extends JdbcCrudDao<Quote, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MarketDataDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuoteDao.class);
 
     private final String TABLE_NAME = "quote";
     private final String ID_NAME = "ticker";
