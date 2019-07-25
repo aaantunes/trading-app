@@ -53,5 +53,14 @@ public class TraderDao extends JdbcCrudDao<Trader, Integer> {
         return simpleInsert;
     }
 
-    //TODO: Might need to implement specific methods to TraderDao
+    public Trader createTrader(String firstname, String lastname, String dob, String country, String email) {
+        Trader trader = new Trader();
+        trader.setFirstName(firstname);
+        trader.setLastName(lastname);
+        //TODO: Enforce dob format
+        trader.setDob(dob);
+        trader.setCountry(country);
+        trader.setEmail(email);
+        return trader;
+    }
 }
