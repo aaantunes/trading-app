@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 
 @Repository
 public class TraderDao extends JdbcCrudDao<Trader, Integer> {
@@ -57,8 +58,7 @@ public class TraderDao extends JdbcCrudDao<Trader, Integer> {
         Trader trader = new Trader();
         trader.setFirstName(firstname);
         trader.setLastName(lastname);
-        //TODO: Enforce dob format
-        trader.setDob(dob);
+        trader.setDob(LocalDate.parse(dob));
         trader.setCountry(country);
         trader.setEmail(email);
         return trader;

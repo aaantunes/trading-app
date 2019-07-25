@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequestMapping("/trader")
 public class TraderContoller {
@@ -38,7 +40,7 @@ public class TraderContoller {
         this.positionDao = positionDao;
     }
 
-    @PostMapping(path = "/traderId/{traderId}")
+    @DeleteMapping(path = "/traderId/{traderId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTrader(@PathVariable Integer traderId) {
         try {

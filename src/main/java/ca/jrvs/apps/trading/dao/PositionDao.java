@@ -17,7 +17,7 @@ public class PositionDao {
 
     private static final Logger logger = LoggerFactory.getLogger(QuoteDao.class);
 
-    private final String TABLE_NAME = "trader";
+    private final String TABLE_NAME = "position";
     private final String ID_NAME = "account_id";
 
     private JdbcTemplate jdbcTemplate;
@@ -37,7 +37,7 @@ public class PositionDao {
         logger.info(sql);
 
         try {
-            trader = (List<Position>) jdbcTemplate.queryForObject(sql,
+            trader = (List<Position>) jdbcTemplate.query(sql,
                     BeanPropertyRowMapper.newInstance(Position.class), accountId);
         } catch (EmptyResultDataAccessException e) {
             logger.debug("Can't find trader id: " + accountId, e);

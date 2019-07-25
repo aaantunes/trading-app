@@ -47,7 +47,7 @@ public class RegisterService {
      */
     public TraderAccountView createTraderAndAccount(Trader trader) {
         List<String> fieldsAsNull = ParametersUtil.checkIfNullsInObject(trader);
-        if (!fieldsAsNull.isEmpty()) {
+        if (fieldsAsNull.size() != 1) {
             logger.error("Empty Trader fields: " + fieldsAsNull);
             throw new IllegalArgumentException("Cannot pass trader object with null values");
         }

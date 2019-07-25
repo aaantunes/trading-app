@@ -3,7 +3,13 @@ package ca.jrvs.apps.trading.model.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.time.LocalDate;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -23,7 +29,9 @@ public class Trader implements Entity<Integer> {
     @JsonProperty("lastName")
     private String lastName;
     @JsonProperty("dob")
-    private String dob;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dob;
     @JsonProperty("country")
     private String country;
     @JsonProperty("email")
@@ -60,12 +68,12 @@ public class Trader implements Entity<Integer> {
     }
 
     @JsonProperty("dob")
-    public String getDob() {
+    public LocalDate getDob() {
         return dob;
     }
 
     @JsonProperty("dob")
-    public void setDob(String dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
     }
 

@@ -75,23 +75,23 @@ public class Application implements CommandLineRunner {
 
         /*TESTING TRADER_CONTROLLER!!!*/
         /*testing createTraderAndAccount()*/
-        Trader trader = new Trader();
-        trader = traderDao.createTrader("Andre", "Antunes",
-                "1997-10-29", "Canada", "aaantune@ryerson.ca");
-        traderContoller.createTraderAndAccount(trader);
-
-        /*testing deleteTrader()*/
-        traderContoller.deleteTrader(trader.getId());
-
-        /*testing createTraderAndAccount(,,,,)*/
-        traderContoller.createTraderAndAccount("Andre", "Antunes",
-                "1997-10-29", "Canada", "aaantune@ryerson.ca");
-
-        /*testing depositFund()*/
-        traderContoller.depositFund(trader.getId(), 1000.0);
-
-        /*testing withdrawFund()*/
-        traderContoller.withdrawFund(trader.getId(), 100.0);
+//        Trader trader = new Trader();
+//        trader = traderDao.createTrader("Andre", "Antunes",
+//                "1997-10-29", "Canada", "aaantune@ryerson.ca");
+//        traderContoller.createTraderAndAccount(trader);
+//
+//        /*testing deleteTrader()*/
+//        traderContoller.deleteTrader(trader.getId());
+//
+//        /*testing createTraderAndAccount(,,,,)*/
+//        traderContoller.createTraderAndAccount("Andre", "Antunes",
+//                "1997-10-29", "Canada", "aaantune@ryerson.ca");
+//
+//        /*testing depositFund()*/
+//        traderContoller.depositFund(trader.getId(), 1000.0);
+//
+//        /*testing withdrawFund()*/
+//        traderContoller.withdrawFund(trader.getId(), 100.0);
     }
 
     public static void main(String[] args) {
@@ -105,7 +105,7 @@ public class Application implements CommandLineRunner {
            System.out.println(ParametersUtil.checkIfNullsInObject(quote));
        }
         //Turn off web
-        app.setWebApplicationType(WebApplicationType.NONE);
+//        app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
     }
 }
