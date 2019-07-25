@@ -10,6 +10,9 @@ import ca.jrvs.apps.trading.model.domain.Quote;
 import ca.jrvs.apps.trading.model.domain.SecurityOrder;
 import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
 import java.sql.SQLException;
+import java.util.List;
+
+import ca.jrvs.apps.trading.util.ParametersUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +58,15 @@ public class OrderService {
      * @throws IllegalArgumentException for invalid input
      */
     public SecurityOrder executeMarketOrder(MarketOrderDto orderDto) {
-        //TODO: Implement executeMarketOrder()
+        List<String> fieldsAsNull = ParametersUtil.checkIfNullsInObject(orderDto);
+        if (orderDto == null || fieldsAsNull.size() != 0){
+            throw new IllegalArgumentException("Cannot pass null orderDto");
+        }
+
+
 
         return null;
+
     }
 
 }
