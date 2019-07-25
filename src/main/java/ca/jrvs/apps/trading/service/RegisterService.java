@@ -56,9 +56,7 @@ public class RegisterService {
         Account account = new Account();
         account.setAmount(0.0);
         account.setTraderId(newTrader.getId());
-        //TODO: set account id instead of autogen?
         account.setId(newTrader.getId());
-        //TODO: Do I need to save() account?
         accountDao.save(account);
 
         TraderAccountView traderAccountView = new TraderAccountView();

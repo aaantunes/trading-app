@@ -28,7 +28,6 @@ public class TraderContoller {
     private PositionDao positionDao;
 
     @Autowired
-
     public TraderContoller(FundTransferService fundTransferService, RegisterService registerService,
                            TraderDao traderDao, AccountDao accountDao, SecurityOrderDao securityOrderDao,
                            PositionDao positionDao) {

@@ -7,7 +7,6 @@ import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +17,7 @@ public class AppConfig {
 
     private Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
-//    @Value("${iex.host}")
+    //    @Value("${iex.host}")
     private String iex_host = System.getenv("IEX_HOST");
 
 
@@ -42,11 +41,11 @@ public class AppConfig {
         String username;
         String password;
 
-        jdbcUrl = System.getenv("PSQL_URL"); //may have to remove jdbc: part
+        jdbcUrl = System.getenv("PSQL_URL");
         username = System.getenv("PSQL_USER");
         password = System.getenv("PSQL_PASSWORD");
 
-        logger.error("JDBC:" + jdbcUrl);
+        logger.info("JDBC:" + jdbcUrl);
 
         if (StringUtil.isEmpty(jdbcUrl, username, password)) {
             throw new IllegalArgumentException("Missing data source config env vars");
