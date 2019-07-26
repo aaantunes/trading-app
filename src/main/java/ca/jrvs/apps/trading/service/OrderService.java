@@ -4,20 +4,18 @@ import ca.jrvs.apps.trading.dao.AccountDao;
 import ca.jrvs.apps.trading.dao.PositionDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
 import ca.jrvs.apps.trading.dao.SecurityOrderDao;
-import ca.jrvs.apps.trading.model.domain.Account;
-import ca.jrvs.apps.trading.model.domain.OrderStatus;
-import ca.jrvs.apps.trading.model.domain.Quote;
-import ca.jrvs.apps.trading.model.domain.SecurityOrder;
+import ca.jrvs.apps.trading.model.domain.*;
 import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
-import java.sql.SQLException;
-import java.util.List;
-
 import ca.jrvs.apps.trading.util.ParametersUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static java.lang.Math.abs;
 
 @Service
 @Transactional
@@ -41,32 +39,68 @@ public class OrderService {
 
     /**
      * Execute a market order
-     *
+     * <p>
      * - validate the order (e.g. size, and ticker)
      * - Create a securityOrder (for security_order table)
      * - Handle buy or sell order
-     *   - buy order : check account balance
-     *   - sell order: check position for the ticker/symbol
-     *   - (please don't forget to update securityOrder.status)
+     * - buy order : check account balance
+     * - sell order: check position for the ticker/symbol
+     * - (please don't forget to update securityOrder.status)
      * - Save and return securityOrder
-     *
+     * <p>
      * NOTE: you will need to some helper methods (protected or private)
      *
      * @param orderDto market order
      * @return SecurityOrder from security_order table
      * @throws org.springframework.dao.DataAccessException if unable to get data from DAO
-     * @throws IllegalArgumentException for invalid input
+     * @throws IllegalArgumentException                    for invalid input
      */
     public SecurityOrder executeMarketOrder(MarketOrderDto orderDto) {
         List<String> fieldsAsNull = ParametersUtil.checkIfNullsInObject(orderDto);
-        if (orderDto == null || fieldsAsNull.size() != 0){
+        if (orderDto == null || fieldsAsNull.size() != 0 || orderDto.getSize() == 0) {
             throw new IllegalArgumentException("Cannot pass null orderDto");
         }
+        if (!quoteDao.existsById(orderDto.getTicker())) {
+            throw new IllegalArgumentException("Enter a valid ticker");
+        }
 
+        SecurityOrder securityOrder = new SecurityOrder();
+        Account account = accountDao.findById(orderDto.getAccountId());
+        Quote quote = quoteDao.findById(orderDto.getTicker());
+        Position position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId());
 
+        securityOrder.setAccountId(account.getId());
+        securityOrder.setId(securityOrder.getId());
+        securityOrder.setTicker(quote.getTicker());
+        securityOrder.setSize(orderDto.getSize());
+        securityOrder.setPrice(quote.getAskPrice());
+        securityOrder.setStatus(OrderStatus.PENDING);
 
-        return null;
-
+        if (securityOrder.getSize() > 0) {
+            securityOrder.setStatus(buyStock(account, quote, orderDto));
+        } else {
+            securityOrder.setStatus(sellStock(account, position, quote, orderDto));
+        }
+        return securityOrderDao.save(securityOrder);
     }
 
+    private OrderStatus buyStock(Account account, Quote quote, MarketOrderDto orderDto) {
+        double cost = abs(orderDto.getSize()) * quote.getAskPrice();
+        if (account.getAmount() >= cost) {
+            account.setAmount(account.getAmount() - cost);
+            return OrderStatus.FILLED;
+        } else {
+            return OrderStatus.CANCELLED;
+        }
+    }
+
+    private OrderStatus sellStock(Account account, Position position, Quote quote, MarketOrderDto orderDto) {
+        double price = abs(orderDto.getSize()) * quote.getAskPrice();
+        if (position.getPosition() > price) {
+            account.setAmount(account.getAmount() + price);
+            return OrderStatus.FILLED;
+        } else {
+            return OrderStatus.CANCELLED;
+        }
+    }
 }

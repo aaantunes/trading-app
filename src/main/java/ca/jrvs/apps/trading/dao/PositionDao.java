@@ -48,4 +48,12 @@ public class PositionDao {
         }
         return trader;
     }
+
+    public Position findByTickerAndAccount(String ticker, Integer accountId) {
+        if (ticker.isEmpty() || accountId == null) {
+            throw new IllegalArgumentException("Cannot pass null arguments");
+        }
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + ID_NAME + " =? AND ticker =?";
+        return jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Position.class), accountId, ticker);
+    }
 }
