@@ -67,13 +67,15 @@ public class OrderService {
         SecurityOrder securityOrder = new SecurityOrder();
         Account account = accountDao.findById(orderDto.getAccountId());
         Quote quote = quoteDao.findById(orderDto.getTicker());
-        Position position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId());
+
+        //TODO: Should I just create a new Position and save it to table here?? where do I change the position table?? Line underneath causes BIG errors
+        Position position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId()); //passes null bc nothing in position table
 
         securityOrder.setAccountId(account.getId());
-        securityOrder.setId(securityOrder.getId());
-        securityOrder.setTicker(quote.getTicker());
+//        securityOrder.setId(securityOrder.getId()); //should populate with save()
+        securityOrder.setTicker(orderDto.getTicker());
         securityOrder.setSize(orderDto.getSize());
-        securityOrder.setPrice(quote.getAskPrice());
+        securityOrder.setPrice(quote.getAskPrice()); //should the price be total amount payed during order but edwards makes no sense
         securityOrder.setStatus(OrderStatus.PENDING);
 
         if (securityOrder.getSize() > 0) {
@@ -81,6 +83,7 @@ public class OrderService {
         } else {
             securityOrder.setStatus(sellStock(account, position, quote, orderDto));
         }
+        accountDao.updateAmountById(account.getId(), account.getAmount());
         return securityOrderDao.save(securityOrder);
     }
 
@@ -96,7 +99,7 @@ public class OrderService {
 
     private OrderStatus sellStock(Account account, Position position, Quote quote, MarketOrderDto orderDto) {
         double price = abs(orderDto.getSize()) * quote.getAskPrice();
-        if (position.getPosition() > price) {
+        if (position.getPosition() <= orderDto.getSize()) {
             account.setAmount(account.getAmount() + price);
             return OrderStatus.FILLED;
         } else {
