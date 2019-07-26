@@ -4,6 +4,7 @@ import ca.jrvs.apps.trading.dao.AccountDao;
 import ca.jrvs.apps.trading.dao.PositionDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
 import ca.jrvs.apps.trading.dao.SecurityOrderDao;
+import ca.jrvs.apps.trading.model.domain.SecurityOrder;
 import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
 import ca.jrvs.apps.trading.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,9 @@ public class OrderController {
 
     @PostMapping(path = "/marketOrder")
     @ResponseStatus(HttpStatus.OK)
-    public void Order(@RequestBody MarketOrderDto orderDto) {
+    public SecurityOrder Order(@RequestBody MarketOrderDto orderDto) {
         try {
-            orderService.executeMarketOrder(orderDto);
+            return orderService.executeMarketOrder(orderDto);
         } catch (Exception e) {
             throw ResponseExceptionUtil.getResponseStatusException(e);
         }
