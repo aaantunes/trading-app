@@ -36,6 +36,7 @@ public class FundTransferService {
         }
         Account account = accountDao.findByTraderId(traderId);
         Double amount = account.getAmount() + fund;
+        account.setAmount(amount);
         accountDao.updateAmountById(account.getId(), amount);
         return account;
     }
@@ -60,6 +61,7 @@ public class FundTransferService {
         }
         Account account = accountDao.findByTraderId(traderId);
         Double amount = account.getAmount() - fund;
+        account.setAmount(amount);
         accountDao.updateAmountById(account.getId(), amount);
         return account;
     }

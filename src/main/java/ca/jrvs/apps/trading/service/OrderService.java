@@ -96,7 +96,7 @@ public class OrderService {
         try {
             position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId());
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Position table not propogated unless you already own stocks");
+            throw new ResourceNotFoundException("No such position for ticker");
         }
 
         if (position.getPosition() >= abs(orderDto.getSize())) {
