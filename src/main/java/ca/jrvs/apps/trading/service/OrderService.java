@@ -1,9 +1,6 @@
 package ca.jrvs.apps.trading.service;
 
-import ca.jrvs.apps.trading.dao.AccountDao;
-import ca.jrvs.apps.trading.dao.PositionDao;
-import ca.jrvs.apps.trading.dao.QuoteDao;
-import ca.jrvs.apps.trading.dao.SecurityOrderDao;
+import ca.jrvs.apps.trading.dao.*;
 import ca.jrvs.apps.trading.model.domain.*;
 import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
 import ca.jrvs.apps.trading.util.ParametersUtil;
@@ -68,11 +65,7 @@ public class OrderService {
         Account account = accountDao.findById(orderDto.getAccountId());
         Quote quote = quoteDao.findById(orderDto.getTicker());
 
-        //TODO: Should I just create a new Position and save it to table here?? where do I change the position table?? Line underneath causes BIG errors
-        Position position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId()); //passes null bc nothing in position table
-
         securityOrder.setAccountId(account.getId());
-//        securityOrder.setId(securityOrder.getId()); //should populate with save()
         securityOrder.setTicker(orderDto.getTicker());
         securityOrder.setSize(orderDto.getSize());
         securityOrder.setPrice(quote.getAskPrice()); //should the price be total amount payed during order but edwards makes no sense
@@ -81,7 +74,7 @@ public class OrderService {
         if (securityOrder.getSize() > 0) {
             securityOrder.setStatus(buyStock(account, quote, orderDto));
         } else {
-            securityOrder.setStatus(sellStock(account, position, quote, orderDto));
+            securityOrder.setStatus(sellStock(account, quote, orderDto));
         }
         accountDao.updateAmountById(account.getId(), account.getAmount());
         return securityOrderDao.save(securityOrder);
@@ -97,8 +90,15 @@ public class OrderService {
         }
     }
 
-    private OrderStatus sellStock(Account account, Position position, Quote quote, MarketOrderDto orderDto) {
+    private OrderStatus sellStock(Account account, Quote quote, MarketOrderDto orderDto) {
         double price = abs(orderDto.getSize()) * quote.getAskPrice();
+        Position position;
+        try {
+            position = positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Position table not propogated unless you already own stocks");
+        }
+
         if (position.getPosition() <= orderDto.getSize()) {
             account.setAmount(account.getAmount() + price);
             return OrderStatus.FILLED;
