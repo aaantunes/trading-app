@@ -4,10 +4,7 @@ import ca.jrvs.apps.trading.dao.AccountDao;
 import ca.jrvs.apps.trading.dao.PositionDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
 import ca.jrvs.apps.trading.dao.SecurityOrderDao;
-import ca.jrvs.apps.trading.model.domain.Account;
-import ca.jrvs.apps.trading.model.domain.OrderStatus;
-import ca.jrvs.apps.trading.model.domain.Quote;
-import ca.jrvs.apps.trading.model.domain.SecurityOrder;
+import ca.jrvs.apps.trading.model.domain.*;
 import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,9 +52,9 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void executeMarketOrderHappyPath() {
+    public void executeMarketOrderBuyHappy() {
         when(quoteDao.existsById(orderDto.getTicker())).thenReturn(true);
-        when(accountDao.existsById(orderDto.getAccountId())).thenReturn(true);
+
         Quote quote = new Quote();
         quote.setAskSize(10);
         quote.setAskPrice(100.00);
@@ -75,7 +72,80 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void executeMarketOrderSadPath() {
+    public void executeMarketOrderBuySad() {
+        when(quoteDao.existsById(orderDto.getTicker())).thenReturn(true);
 
+        Quote quote = new Quote();
+        quote.setAskSize(10);
+        quote.setAskPrice(100.00);
+        when(quoteDao.findById(orderDto.getTicker())).thenReturn(quote);
+
+        Account account = new Account();
+        account.setAmount(10.00);
+        account.setId(orderDto.getAccountId());
+        when(accountDao.findById(orderDto.getAccountId())).thenReturn(account);
+
+        orderService.executeMarketOrder(orderDto);
+        verify(securityOrderDao).save(captorSecurityOrder.capture());
+        SecurityOrder captorOrder = captorSecurityOrder.getValue();
+        assertEquals(OrderStatus.CANCELLED, captorOrder.getStatus());
     }
+
+
+    @Test
+    public void executeMarketOrderSellHappy() {
+        orderDto.setSize(-1);
+        when(quoteDao.existsById(orderDto.getTicker())).thenReturn(true);
+
+        Quote quote = new Quote();
+        quote.setAskSize(10);
+        quote.setAskPrice(100.00);
+        when(quoteDao.findById(orderDto.getTicker())).thenReturn(quote);
+
+        Account account = new Account();
+        account.setAmount(100.00);
+        account.setId(orderDto.getAccountId());
+        account.setTraderId(orderDto.getAccountId());
+        when(accountDao.findById(orderDto.getAccountId())).thenReturn(account);
+
+        Position position = new Position();
+        position.setAccountId(account.getId());
+        position.setTicker(quote.getTicker());
+        position.setPosition(1);
+        when(positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId())).thenReturn(position);
+
+        orderService.executeMarketOrder(orderDto);
+        verify(securityOrderDao).save(captorSecurityOrder.capture());
+        SecurityOrder captorOrder = captorSecurityOrder.getValue();
+        assertEquals(OrderStatus.FILLED, captorOrder.getStatus());
+    }
+
+    @Test
+    public void executeMarketOrderSellSad() {
+        orderDto.setSize(-10);
+        when(quoteDao.existsById(orderDto.getTicker())).thenReturn(true);
+
+        Quote quote = new Quote();
+        quote.setAskSize(10);
+        quote.setAskPrice(100.00);
+        when(quoteDao.findById(orderDto.getTicker())).thenReturn(quote);
+
+        Account account = new Account();
+        account.setAmount(100.00);
+        account.setId(orderDto.getAccountId());
+        account.setTraderId(orderDto.getAccountId());
+        when(accountDao.findById(orderDto.getAccountId())).thenReturn(account);
+
+        Position position = new Position();
+        position.setAccountId(account.getId());
+        position.setTicker(quote.getTicker());
+        position.setPosition(5);
+        when(positionDao.findByTickerAndAccount(orderDto.getTicker(), orderDto.getAccountId())).thenReturn(position);
+
+        orderService.executeMarketOrder(orderDto);
+        verify(securityOrderDao).save(captorSecurityOrder.capture());
+        SecurityOrder captorOrder = captorSecurityOrder.getValue();
+        assertEquals(OrderStatus.CANCELLED, captorOrder.getStatus());
+    }
+
 }
