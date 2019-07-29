@@ -15,10 +15,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
         "price",
         "notes"
 })
-public class SecurityOrder implements Entity<String> {
+public class SecurityOrder implements Entity<Integer> {
 
     @JsonProperty("id")
-    private String id;
+    private Integer id;
     @JsonProperty("accountId")
     private Integer accountId;
     @JsonProperty("status")
@@ -33,12 +33,12 @@ public class SecurityOrder implements Entity<String> {
     private Object notes;
 
     @JsonProperty("id")
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
     @JsonProperty("id")
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

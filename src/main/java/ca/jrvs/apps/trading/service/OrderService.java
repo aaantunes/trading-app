@@ -99,8 +99,11 @@ public class OrderService {
             throw new ResourceNotFoundException("Position table not propogated unless you already own stocks");
         }
 
-        if (position.getPosition() <= orderDto.getSize()) {
+        if (position.getPosition() >= abs(orderDto.getSize())) {
             account.setAmount(account.getAmount() + price);
+            if (position.getPosition() == 0) {
+
+            }
             return OrderStatus.FILLED;
         } else {
             return OrderStatus.CANCELLED;
