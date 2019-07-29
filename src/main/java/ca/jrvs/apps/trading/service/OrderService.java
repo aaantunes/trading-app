@@ -101,9 +101,6 @@ public class OrderService {
 
         if (position.getPosition() >= abs(orderDto.getSize())) {
             account.setAmount(account.getAmount() + price);
-            if (position.getPosition() == 0) {
-
-            }
             return OrderStatus.FILLED;
         } else {
             return OrderStatus.CANCELLED;
