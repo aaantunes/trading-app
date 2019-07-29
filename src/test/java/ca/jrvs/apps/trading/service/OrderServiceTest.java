@@ -66,7 +66,7 @@ public class OrderServiceTest {
         Account account = new Account();
         account.setAmount(100.00);
         account.setId(orderDto.getAccountId());
-        when(accountDao.findByTraderId(orderDto.getAccountId())).thenReturn(account);
+        when(accountDao.findById(orderDto.getAccountId())).thenReturn(account);
 
         orderService.executeMarketOrder(orderDto);
         verify(securityOrderDao).save(captorSecurityOrder.capture());
