@@ -50,6 +50,7 @@ public class TraderContoller {
     }
 
     @PostMapping(path = "/")
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public TraderAccountView createTraderAndAccount(@RequestBody Trader trader) {
         try {
@@ -60,6 +61,7 @@ public class TraderContoller {
     }
 
     @PostMapping(path = "/firstname/{firstname}/lastname/{lastname}/dob/{dob}/country/{country}/email/{email}")
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public TraderAccountView createTraderAndAccount(@PathVariable String firstname,
                                                     @PathVariable String lastname,
@@ -75,6 +77,7 @@ public class TraderContoller {
     }
 
     @PutMapping(path = "/deposit/traderId/{traderId}/amount/{amount}")
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Account depositFund(@PathVariable Integer traderId, @PathVariable Double amount) {
         try {
@@ -85,6 +88,7 @@ public class TraderContoller {
     }
 
     @PutMapping(path = "/withdraw/traderId/{traderId}/amount/{amount}")
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Account withdrawFund(@PathVariable Integer traderId, @PathVariable Double amount) {
         try {

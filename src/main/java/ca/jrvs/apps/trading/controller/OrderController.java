@@ -33,6 +33,7 @@ public class OrderController {
     }
 
     @PostMapping(path = "/marketOrder")
+    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public SecurityOrder Order(@RequestBody MarketOrderDto orderDto) {
         try {
