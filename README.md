@@ -15,15 +15,18 @@
 
   - i.e. `http://localhost:8080/quote/iex/ticker/aapl` 
 
-    <img src="assets/postman_ex2.PNG" >
+<img src="assets/postman_ex2.PNG" >
 
-    <img src="assets/postman_ex.PNG" >
+
+<img src="assets/postman_ex.PNG" >
+
 
     To use Swagger UI, open the following link in your browser to be redirected to the swagger-ui of the application. 
 
   - i.e. `http://localhost:8080/swagger-ui.html`
 
-    <img src="assets/swagger_ex.PNG" >
+<img src="assets/swagger_ex.PNG" >
+
 
     This application also needs several environment variables to run. These include:
 
@@ -89,7 +92,7 @@ Swagger is an open-source software framework backed by a large ecosystem of tool
 
 - Trading Application Workflow
 
-  <img src="assets/trading-app-architecture.jpg" >
+<img src="assets/trading-app-architecture.jpg" >
 
 
   - `Controller` : Parse user inputs and then calls the corresponding service method.
