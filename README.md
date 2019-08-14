@@ -21,7 +21,7 @@
 <img src="assets/postman_ex.PNG" >
 
 
-  To use Swagger UI, open the following link in your browser to be redirected to the swagger-ui of the application. 
+To use Swagger UI, open the following link in your browser to be redirected to the swagger-ui of the application. 
 
   - i.e. `http://localhost:8080/swagger-ui.html`
 
