@@ -9,8 +9,10 @@ import ca.jrvs.apps.trading.model.dto.MarketOrderDto;
 import ca.jrvs.apps.trading.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/order")
@@ -32,6 +34,7 @@ public class OrderController {
         this.positionDao = positionDao;
     }
 
+    @Scheduled(fixedRate = 10000)
     @PostMapping(path = "/marketOrder")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)

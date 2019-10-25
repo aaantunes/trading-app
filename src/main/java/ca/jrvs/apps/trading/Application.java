@@ -3,17 +3,18 @@ package ca.jrvs.apps.trading;
 import ca.jrvs.apps.trading.controller.QuoteController;
 import ca.jrvs.apps.trading.dao.MarketDataDao;
 import ca.jrvs.apps.trading.dao.QuoteDao;
-import ca.jrvs.apps.trading.model.domain.SecurityOrder;
 import ca.jrvs.apps.trading.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-
+@EnableScheduling
 @SpringBootApplication(exclude = {
         JdbcTemplateAutoConfiguration.class,
         DataSourceAutoConfiguration.class,
@@ -43,7 +44,7 @@ public class Application implements CommandLineRunner {
         SpringApplication app = new SpringApplication(Application.class);
 
         //Turn off web
-//        app.setWebApplicationType(WebApplicationType.NONE);
+        app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
     }
 }
