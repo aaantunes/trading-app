@@ -7,9 +7,11 @@ import ca.jrvs.apps.trading.model.domain.Quote;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +37,6 @@ public class QuoteService {
      * Make sure set a default value for number field(s).
      */
     public static Quote buildQuoteFromIexQuote(IexQuote iexQuote) {
-        //TODO: Implement buildQuoteFromIexQuote()
         if (iexQuote == null) {
             throw new IllegalArgumentException("Must pass iexQuote into buildQuoteFromIexQuote");
         }
@@ -99,7 +100,9 @@ public class QuoteService {
      * @throws org.springframework.dao.DataAccessException        if unable to retrieve data
      * @throws IllegalArgumentException                           for invalid input
      */
+    @Scheduled(fixedDelay = 10000)
     public void updateMarketData() {
+        logger.info("updateMarketData method called at : " + new Timestamp(System.currentTimeMillis()));
         List<Quote> quotes = quoteDao.findAll();
         List<IexQuote> iexQuotes = new ArrayList<>();
         List<Quote> updatedQuotes = new ArrayList<>();
